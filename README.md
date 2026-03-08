@@ -12,12 +12,12 @@ Veja o conversor em ação:
 
 ## Funcionalidades
 
-- ✅ Converter entre diferentes moedas (161 moedas suportadas)
+- ✅ Converter entre 6 moedas principais (ARS, BOB, BRL, CLP, COP, USD)
 - ✅ Integração com API de taxas de câmbio em tempo real
-- ✅ Interface interativa no console
-- ✅ Validação de dados de entrada
-- ✅ Tratamento de erros robusto
-- ✅ Obtém taxa de câmbio e resultado da conversão
+- ✅ Interface interativa no console com validação
+- ✅ Tratamento robusto de erros da API
+- ✅ Armazenamento automático da chave API
+- ✅ Suporte a múltiplas conversões na mesma sessão
 
 ## Requisitos
 
@@ -66,25 +66,34 @@ Para detalhes completos, consulte [ENVIRONMENT-SETUP.md](ENVIRONMENT-SETUP.md)
 
 ### 4. Compile e Execute
 
-**Windows (mais fácil):**
+**Windows (recomendado):**
 ```bash
-run.bat
+# Build automático
+.\build.ps1
+
+# Executar
+.\run-jar.bat
 ```
 
 **Linux/macOS:**
 ```bash
-chmod +x run.sh
+# Build com Maven (se disponível)
+mvn clean package
+java -jar target/conversor-moedas-1.0.0.jar
+
+# Ou build manual
+chmod +x build.sh run.sh
+./build.sh
 ./run.sh
 ```
 
-**Manual (qualquer SO):**
+**Build Manual (qualquer SO):**
 ```bash
-# Baixe GSON de: https://repo1.maven.org/maven2/com/google/code/gson/gson/2.8.9/gson-2.8.9.jar
-# Crie a pasta lib/ e coloque o gson-2.8.9.jar lá
+# Baixe GSON 2.10.1: https://repo1.maven.org/maven2/com/google/code/gson/gson/2.10.1/gson-2.10.1.jar
+# Crie a pasta lib/ e coloque o JAR lá
 
-javac -cp "lib/*" -d bin src/main/java/com/conversor/**/*.java
-java -cp "bin:lib/*" com.conversor.Main  # Linux/macOS
-java -cp "bin;lib\*" com.conversor.Main  # Windows
+javac -cp "lib/gson-2.10.1.jar" -d bin src/main/java/com/conversor/Main.java
+java -cp "bin;lib/gson-2.10.1.jar" com.conversor.Main
 ```
 
 ## Como Usar
@@ -97,26 +106,33 @@ java -cp "bin;lib\*" com.conversor.Main  # Windows
 
 ### Exemplo de Execução
 ```
-╔════════════════════════════════════════╗
-║    Bem-vindo ao Conversor de Moedas!   ║
-║   Powered by Exchange Rate API         ║
-╚════════════════════════════════════════╝
+===========================================
+   Conversor de Moedas (Consulta por Pares)  
+===========================================
 
-Digite a moeda de origem (ex: USD): USD
-Digite a moeda de destino (ex: BRL): BRL
-Digite o valor a converter: 100
+***************************************************
+Moedas disponíveis para conversão:
+ ARS - Peso argentino
+ BOB - Boliviano boliviano
+ BRL - Real brasileiro
+ CLP - Peso chileno
+ COP - Peso colombiano
+ USD - Dólar americano
+***************************************************
+(Digite 'SAIR' a qualquer momento para encerrar)
 
-==================================================
-Conversão de USD para BRL
-==================================================
-Valor original:    100.00 USD
-Taxa de câmbio:    5.1234
-Valor convertido:  512.34 BRL
-==================================================
+Moeda de origem (ex: USD): USD
+Moeda de destino (ex: BRL): BRL
+Valor a converter: 100
 
-Deseja fazer outra conversão? (s/n): n
+A contactar a API e a obter as taxas de câmbio...
 
-Obrigado por usar o Conversor de Moedas! 👋
+--- Resultado da Conversão ---
+Taxa de câmbio: 1 USD = 5,2664 BRL
+Valor final: 100,00 USD = 526,64 BRL
+------------------------------
+
+Pressione ENTER para realizar uma nova conversão...
 ```
 
 ## Estrutura do Projeto
@@ -124,40 +140,41 @@ Obrigado por usar o Conversor de Moedas! 👋
 ```
 src/
 ├── main/
-│   ├── java/
-│   │   └── com/
-│   │       └── conversor/
-│   │           ├── Main.java                    # Classe principal com UI
-│   │           ├── api/
-│   │           │   └── CurrencyExchangeAPI.java # Cliente HTTP da API
-│   │           ├── model/
-│   │           │   └── ExchangeRateResponse.java # Modelo de resposta
-│   │           └── service/
-│   │               └── CurrencyConverter.java   # Lógica de conversão
-│   └── resources/
-│       └── config.properties                    # Configurações da API
-└── test/
-    └── java/
+│   └── java/
+│       └── com/
+│           └── conversor/
+│               └── Main.java                    # Classe principal com UI console
+├── main/
+│   └── resources/                               # Recursos estáticos (se necessário)
+├── test/
+│   └── java/                                    # Testes (futuro)
+├── lib/                                         # Dependências JAR
+├── dist/                                        # Arquivos compilados e JAR
+├── index.html                                   # Interface web (bonus)
+├── build.ps1                                    # Script de build PowerShell
+├── run-jar.bat                                  # Script de execução
+├── pom.xml                                      # Configuração Maven
+├── .env                                         # Variáveis de ambiente (local)
+├── .env.example                                 # Exemplo de configuração
+└── README.md                                    # Esta documentação
 ```
 
 ## Dependências
 
-- **GSON**: Biblioteca para converter JSON em objetos Java
-  - Baixe em: https://repo1.maven.org/maven2/com/google/code/gson/gson/
-  - Adicione o JAR ao classpath ao compilar
+- **Java 17+**: Para suporte a Records e HttpClient moderno
+- **GSON 2.10.1**: Biblioteca para converter JSON em objetos Java
+  - Baixe em: https://repo1.maven.org/maven2/com/google/code/gson/gson/2.10.1/gson-2.10.1.jar
+  - Ou use Maven/Gradle para gerenciar dependências
 
-## API Utilizada
+## Tecnologias Utilizadas
 
-**Exchange Rate API** - https://www.exchangerate-api.com/
-
-### Endpoints
-- `GET /pair/{base_code}/{target_code}` - Obtém taxa de câmbio
-- `GET /pair/{base_code}/{target_code}/{amount}` - Converte um valor
-
-### Moedas Suportadas
-A API suporta mais de 161 moedas, incluindo: USD, BRL, EUR, GBP, JPY, AUD, CAD, CHF, etc.
-
-Para ver a lista completa e entender melhor a API, consulte [API-DOCUMENTATION.md](API-DOCUMENTATION.md)
+- **Java 17**: Linguagem principal com Records e HttpClient
+- **HttpClient**: Cliente HTTP moderno (Java 11+)
+- **GSON 2.10.1**: Serialização/deserialização JSON
+- **PowerShell**: Scripts de build e execução
+- **Maven**: Gerenciamento de dependências e build
+- **Exchange Rate API**: Fonte de dados de taxas de câmbio
+- **HTML/CSS/JavaScript**: Interface web bonus (Tailwind + Lucide Icons)
 
 ## Status da API
 
@@ -181,13 +198,18 @@ Para ver a lista completa e entender melhor a API, consulte [API-DOCUMENTATION.m
 
 ## Próximas Melhorias
 
+- [x] **Implementado**: Interface web HTML (bonus)
+- [x] **Implementado**: Armazenamento automático da chave API
+- [x] **Implementado**: Validação de moedas permitidas
+- [x] **Implementado**: HttpClient moderno (Java 11+)
+- [x] **Implementado**: Records para tipagem forte
+- [ ] Adicionar mais moedas à lista permitida
 - [ ] Implementar interface gráfica (Swing/JavaFX)
 - [ ] Adicionar histórico de conversões
 - [ ] Implementar cache de taxas
 - [ ] Criar testes unitários
-- [ ] Gerar arquivo JAR executável
-- [ ] Adicionar suporte a mais fontes de dados
-- [ ] Criar endpoint REST
+- [ ] Melhorar tratamento de erros de rede
+- [ ] Adicionar suporte a conversão offline (cache)
 
 ## Autor
 
