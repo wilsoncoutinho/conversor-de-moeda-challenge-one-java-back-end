@@ -23,25 +23,10 @@
                 <i data-lucide="circle-dollar-sign" class="w-10 h-10"></i>
             </div>
             <h1 class="text-2xl font-bold">Conversor de Moedas</h1>
-            <p class="text-indigo-200 text-sm mt-1">Usando ExchangeRate-API (Consulta por Pares)</p>
+            <p class="text-indigo-200 text-sm mt-1">Servidor Local - ExchangeRate API</p>
         </header>
 
         <div class="p-6 space-y-5">
-            <!-- Configuração da API -->
-            <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
-                <label for="apiKey" class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">
-                    Sua Chave da API (Obrigatório)
-                </label>
-                <div class="relative">
-                    <i data-lucide="key" class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-slate-400"></i>
-                    <input type="password" id="apiKey" placeholder="Cole sua chave aqui..." 
-                        class="w-full pl-9 pr-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all text-sm">
-                </div>
-                <p class="text-xs text-slate-400 mt-2">
-                    Obtenha sua chave gratuita em <a href="https://www.exchangerate-api.com/" target="_blank" class="text-indigo-500 hover:underline">exchangerate-api.com</a>
-                </p>
-            </div>
-
             <!-- Entrada de Valor -->
             <div>
                 <label for="amount" class="block text-sm font-medium text-slate-700 mb-1">Valor a converter</label>
@@ -109,7 +94,6 @@
         lucide.createIcons();
 
         // Elementos do DOM
-        const apiKeyInput = document.getElementById('apiKey');
         const amountInput = document.getElementById('amount');
         const baseCurrency = document.getElementById('baseCurrency');
         const targetCurrency = document.getElementById('targetCurrency');
@@ -137,17 +121,11 @@
 
         // Função principal de conversão
         const converter = async () => {
-            const apiKey = apiKeyInput.value.trim();
             const amount = parseFloat(amountInput.value);
             const base = baseCurrency.value;
             const target = targetCurrency.value;
 
             // Validações básicas
-            if (!apiKey) {
-                showError('A chave da API é necessária para realizar a consulta.');
-                apiKeyInput.focus();
-                return;
-            }
             if (isNaN(amount) || amount < 0) {
                 showError('Por favor, insira um valor numérico válido maior que zero.');
                 return;
@@ -163,15 +141,24 @@
             convertIcon.classList.add('animate-spin');
 
             try {
-                // Estrutura exata mencionada: Consulta por pares
-                const url = `https://v6.exchangerate-api.com/v6/${apiKey}/pair/${base}/${target}`;
+                // Chamar servidor local
+                const response = await fetch('/convert', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        amount: amount,
+                        fromCurrency: base,
+                        toCurrency: target
+                    })
+                });
                 
-                const response = await fetch(url);
                 const data = await response.json();
 
                 if (data.result === 'success') {
                     const rate = data.conversion_rate;
-                    const total = amount * rate;
+                    const total = data.conversion_result;
 
                     // Atualiza a UI com os resultados
                     resultAmount.textContent = formatCurrency(total, target);
@@ -179,17 +166,10 @@
                     
                     resultArea.classList.remove('hidden');
                 } else {
-                    // Tratamento de erros específicos da API
-                    let errorText = "Ocorreu um erro desconhecido.";
-                    if (data['error-type'] === 'invalid-key') errorText = "A chave da API inserida é inválida.";
-                    if (data['error-type'] === 'inactive-account') errorText = "Sua conta na API está inativa.";
-                    if (data['error-type'] === 'quota-reached') errorText = "Você atingiu o limite de requisições da sua chave.";
-                    if (data['error-type'] === 'unsupported-code') errorText = "Código de moeda não suportado.";
-                    
-                    showError(errorText);
+                    showError(data.error || 'Erro desconhecido no servidor.');
                 }
             } catch (error) {
-                showError('Falha na conexão. Verifique sua internet.');
+                showError('Falha na conexão com o servidor local. Certifique-se de que o servidor Java está rodando.');
                 console.error(error);
             } finally {
                 convertIcon.classList.remove('animate-spin');
