@@ -2,6 +2,14 @@
 
 Um aplicativo de conversão de moedas desenvolvido em Java como parte do desafio ONE da Alura. Utiliza a **Exchange Rate API** para obter taxas de câmbio em tempo real.
 
+## 🎥 Demonstração
+
+Veja o conversor em ação:
+
+[![Demonstração do Conversor de Moedas](https://img.youtube.com/vi/SEU_VIDEO_ID/maxresdefault.jpg)](https://www.youtube.com/watch?v=SEU_VIDEO_ID)
+
+> **Nota**: Substitua `SEU_VIDEO_ID` pelo ID real do seu vídeo no YouTube.
+
 ## Funcionalidades
 
 - ✅ Converter entre diferentes moedas (161 moedas suportadas)

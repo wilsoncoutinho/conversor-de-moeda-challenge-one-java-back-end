@@ -23,12 +23,12 @@ Write-Host "[OK] Diretórios criados" -ForegroundColor Green
 # Verificar/verificar dependências
 Write-Host "Verificando dependências..." -ForegroundColor Green
 
-$gsonJar = "lib/gson-2.8.9.jar"
+$gsonJar = "lib/gson-2.10.1.jar"
 
 if (!(Test-Path $gsonJar)) {
     Write-Host "Baixando Gson..." -ForegroundColor Yellow
     try {
-        Invoke-WebRequest -Uri "https://repo1.maven.org/maven2/com/google/code/gson/gson/2.8.9/gson-2.8.9.jar" -OutFile $gsonJar
+        Invoke-WebRequest -Uri "https://repo1.maven.org/maven2/com/google/code/gson/gson/2.10.1/gson-2.10.1.jar" -OutFile $gsonJar
         Write-Host "[OK] Gson baixado" -ForegroundColor Green
     } catch {
         Write-Host "[ERRO] Falha ao baixar Gson: $($_.Exception.Message)" -ForegroundColor Red
@@ -65,9 +65,9 @@ Write-Host "Criando manifest..." -ForegroundColor Green
 $manifestContent = @"
 Manifest-Version: 1.0
 Main-Class: com.conversor.Main
-Class-Path: gson-2.8.9.jar
+Class-Path: gson-2.10.1.jar
 "@
-$manifestContent | Out-File -FilePath "manifest.txt" -Encoding UTF8
+$manifestContent | Out-File -FilePath "manifest.txt" -Encoding ASCII
 Write-Host "[OK] Manifest criado" -ForegroundColor Green
 
 # Criar JAR executável
@@ -114,7 +114,7 @@ if exist .env (
 
 REM Executa o JAR
 cd dist
-java -cp "conversor-moedas.jar;gson-2.8.9.jar" com.conversor.Main
+java -cp "conversor-moedas.jar;gson-2.10.1.jar" com.conversor.Main
 cd ..
 '@
 $runScript | Out-File -FilePath "run-jar.bat" -Encoding UTF8
@@ -130,4 +130,4 @@ Write-Host "Para executar:"
 Write-Host "  .\run-jar.bat"
 Write-Host ""
 Write-Host "Ou:"
-Write-Host "  java -cp 'dist/conversor-moedas.jar;dist/gson-2.8.9.jar' com.conversor.Main"
+Write-Host "  java -cp 'dist/conversor-moedas.jar;dist/gson-2.10.1.jar' com.conversor.Main"

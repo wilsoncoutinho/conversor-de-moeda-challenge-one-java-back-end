@@ -1,3 +1,5 @@
+package com.conversor;
+
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -14,10 +16,10 @@ import com.google.gson.annotations.SerializedName;
 
 /**
  * Conversor de Moedas utilizando Java HttpClient e a ExchangeRate-API.
- * * Nota: Para compilar e executar este ficheiro, é necessário ter a biblioteca Gson 
+ * * Nota: Para compilar e executar este ficheiro, é necessário ter a biblioteca Gson
  * no seu classpath (por exemplo, adicionando a dependência no Maven ou Gradle).
  */
-public class ConversorDeMoedas {
+public class Main {
 
     // Utilização de um Record com a anotação @SerializedName do Gson.
     // Isso permite manter as variáveis no padrão Java (camelCase) enquanto
@@ -53,9 +55,23 @@ public class ConversorDeMoedas {
         System.out.println("   Conversor de Moedas (Consulta por Pares)  ");
         System.out.println("===========================================\n");
 
-        // 1. Obter a chave da API (Solicitamos apenas uma vez no início)
-        System.out.print("Introduza a sua chave da ExchangeRate-API: ");
-        String apiKey = scanner.nextLine().trim();
+        // 1. Obter a chave da API
+        String apiKey = System.getenv("EXCHANGE_RATE_API_KEY");
+        if (apiKey == null || apiKey.trim().isEmpty()) {
+            System.out.print("Introduza a sua chave da ExchangeRate-API: ");
+            apiKey = scanner.nextLine().trim();
+            // Salvar no .env para futuras execuções
+            try {
+                java.nio.file.Files.writeString(
+                    java.nio.file.Paths.get(".env"),
+                    "\nEXCHANGE_RATE_API_KEY=" + apiKey,
+                    java.nio.file.StandardOpenOption.APPEND
+                );
+                System.out.println("Chave salva no arquivo .env para futuras execuções.");
+            } catch (Exception e) {
+                System.out.println("Aviso: Não foi possível salvar a chave no .env: " + e.getMessage());
+            }
+        }
 
         // Fase 8: Definindo a lista de moedas filtradas permitidas
         List<String> moedasValidas = List.of("ARS", "BOB", "BRL", "CLP", "COP", "USD");
