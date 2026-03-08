@@ -6,9 +6,7 @@ Um aplicativo de conversão de moedas desenvolvido em Java como parte do desafio
 
 Veja o conversor em ação:
 
-[![Demonstração do Conversor de Moedas](https://img.youtube.com/vi/https://youtu.be/wwlSyQhPZQ4/maxresdefault.jpg)](https://www.youtube.com/watch?v=https://youtu.be/wwlSyQhPZQ4)
-
-> **Nota**: Substitua `SEU_VIDEO_ID` pelo ID real do seu vídeo no YouTube.
+[![Demonstração do Conversor de Moedas](https://img.youtube.com/vi/wwlSyQhPZQ4/maxresdefault.jpg)](https://www.youtube.com/watch?v=wwlSyQhPZQ4)
 
 ## Funcionalidades
 
