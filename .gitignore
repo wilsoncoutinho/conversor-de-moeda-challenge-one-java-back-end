@@ -45,3 +45,10 @@ logs/
 # OS
 .DS_Store
 Thumbs.db
+
+# Environment and Configuration Files
+.env
+.env.local
+.env.*.local
+*.properties.local
+config.local.properties

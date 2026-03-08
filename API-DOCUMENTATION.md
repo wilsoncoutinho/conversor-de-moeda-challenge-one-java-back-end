@@ -61,8 +61,10 @@ Retorna a taxa de câmbio em tempo real.
 
 **Exemplo**:
 ```
-https://v6.exchangerate-api.com/v6/9026bfb0183b94379a5ef93b/pair/USD/BRL
+https://v6.exchangerate-api.com/v6/{API_KEY}/pair/USD/BRL
 ```
+
+⚠️ Nunca inclua sua chave de API em URLs publicamente visíveis!
 
 **Resposta**:
 ```json

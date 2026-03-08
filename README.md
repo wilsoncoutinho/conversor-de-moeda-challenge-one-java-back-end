@@ -25,24 +25,58 @@ git clone https://github.com/wilsoncoutinho/conversor-de-moeda-challenge-one-jav
 cd conversor-de-moeda-challenge-one-java-back-end
 ```
 
-### 2. Obtenha a chave de API
+### 2. Configure a Chave de API (IMPORTANTE!)
+⚠️ **A chave é armazenada em variáveis de ambiente, não no código!**
+
+**Opção A - Usando arquivo .env (Recomendado):**
+```bash
+# Copie o arquivo de exemplo
+cp .env.example .env
+
+# Edite e adicione sua chave
+# Abra .env no seu editor e adicione:
+# EXCHANGE_RATE_API_KEY=sua_chave_aqui
+```
+
+**Opção B - Variável de ambiente (Windows):**
+```cmd
+set EXCHANGE_RATE_API_KEY=sua_chave_aqui
+```
+
+**Opção B - Variável de ambiente (Linux/macOS):**
+```bash
+export EXCHANGE_RATE_API_KEY=sua_chave_aqui
+```
+
+Para detalhes completos, consulte [ENVIRONMENT-SETUP.md](ENVIRONMENT-SETUP.md)
+
+### 3. Obtenha sua Chave de API
 1. Acesse [exchangerate-api.com](https://www.exchangerate-api.com/)
 2. Registre uma conta gratuita
 3. Copie sua Chave de API
-4. Abra `src/main/java/com/conversor/api/CurrencyExchangeAPI.java`
-5. Substitua a chave na linha:
-   ```java
-   private static final String API_KEY = "SUA_CHAVE_AQUI";
-   ```
+4. Configure conforme a opção acima
 
-### 3. Compile o projeto
+### 4. Compile e Execute
+
+**Windows (mais fácil):**
 ```bash
-javac -d bin src/main/java/com/conversor/*.java src/main/java/com/conversor/**/*.java
+run.bat
 ```
 
-### 4. Execute o programa
+**Linux/macOS:**
 ```bash
-java -cp bin com.conversor.Main
+chmod +x run.sh
+./run.sh
+```
+
+**Manual (qualquer SO):**
+```bash
+# Baixe GSON de: https://repo1.maven.org/maven2/com/google/code/gson/gson/2.8.9/gson-2.8.9.jar
+# Crie a pasta lib/ e coloque o gson-2.8.9.jar lá
+
+javac -cp "lib/*" -d bin src/main/java/com/conversor/**/*.java
+java -cp "bin:lib/*" com.conversor.Main  # Linux/macOS
+java -cp "bin;lib\*" com.conversor.Main  # Windows
 ```
 
 ## Como Usar
@@ -125,10 +159,17 @@ Para ver a lista completa e entender melhor a API, consulte [API-DOCUMENTATION.m
 
 ## Segurança
 
-⚠️ **Importante**: A chave de API foi incluída apenas para demonstração. Em produção:
-- Use variáveis de ambiente
-- Nunca exponha a chave em repositórios públicos
-- Considere usar um servidor backend para fazer as requisições
+✅ **Implementado neste projeto:**
+- Chave de API armazenada em **variáveis de ambiente**, não no código
+- Arquivo `.env` ignorado pelo Git (não será exposto)
+- Arquivo `.env.example` como documentação
+- Validação e tratamento robusto de erros
+
+⚠️ **Importante:**
+- O arquivo `.env` contém dados sensíveis e **não deve ser compartilhado**
+- Está em `.gitignore` e não será incluído em commits
+- Use variáveis de ambiente em produção
+- Consulte [ENVIRONMENT-SETUP.md](ENVIRONMENT-SETUP.md) para detalhes
 
 ## Próximas Melhorias
 

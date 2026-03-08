@@ -13,8 +13,26 @@ import com.google.gson.Gson;
 public class CurrencyExchangeAPI {
     
     private static final String API_BASE_URL = "https://v6.exchangerate-api.com/v6";
-    private static final String API_KEY = "9026bfb0183b94379a5ef93b"; // Sua chave de API
+    private static final String API_KEY = getApiKey();
     private final Gson gson = new Gson();
+
+    /**
+     * Obtém a chave de API das variáveis de ambiente
+     * @return Chave de API
+     * @throws RuntimeException se a chave não estiver configurada
+     */
+    private static String getApiKey() {
+        String apiKey = System.getenv("EXCHANGE_RATE_API_KEY");
+        if (apiKey == null || apiKey.trim().isEmpty()) {
+            throw new RuntimeException(
+                "❌ Erro: Variável de ambiente 'EXCHANGE_RATE_API_KEY' não configurada. " +
+                "Configure a variável antes de executar o programa.\n" +
+                "Windows: set EXCHANGE_RATE_API_KEY=sua_chave_aqui\n" +
+                "Linux/Mac: export EXCHANGE_RATE_API_KEY=sua_chave_aqui"
+            );
+        }
+        return apiKey;
+    }
 
     /**
      * Obtém a taxa de conversão entre duas moedas
